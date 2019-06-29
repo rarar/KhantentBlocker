@@ -1,0 +1,45 @@
+body {
+  position: relative;
+  width: 360px;
+  height: 832px;
+  background: #FFFFFF;
+  margin: 0;
+  padding: 0;
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 22px;
+  color: #21242C;
+}
+
+header {
+  position: relative;
+  width: 360px;
+  height: 200px;
+  left: 0px;
+  top: 0px;
+  background: #0A2A66;
+}
+
+img {
+  position: absolute;
+  width: 152px;
+  height: 24px;
+  left: 24px;
+  top: 24px;
+}
+
+h1 {
+  font-style: normal;
+  font-weight: 900;
+  font-size: 28px;
+  line-height: 32px;
+  color: white;
+  position: absolute;
+  left: 24px;
+  bottom: 8px;
+}
+main {
+  padding: 0 24px;
+}

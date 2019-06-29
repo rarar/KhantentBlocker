@@ -1,0 +1,29 @@
+{
+  "manifest_version": 2,
+  "name": "Khan-tent Blocker",
+  "description": "Set limits on social media and learn things instead!",
+  "version": "0.1",
+  "content_scripts": [{
+    "matches": ["*://www.facebook.com/*"],
+    "js": ["background.js","content.js"]
+  }],
+  "permissions": ["activeTab", "storage"],
+  "browser_action": {
+    "default_icon": {
+      "16": "images/icon16.png",
+      "32": "images/icon32.png",
+      "48": "images/icon48.png",
+      "128": "images/icon128.png"
+    },
+    "default_popup": "extension.html"
+  },
+  "icons": {
+    "16": "images/icon16.png",
+    "32": "images/icon32.png",
+    "48": "images/icon48.png",
+    "128": "images/icon128.png"
+  },
+  "background": {
+    "scripts": ["background.js"]
+  }
+}
