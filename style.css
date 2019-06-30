@@ -40,6 +40,78 @@ h1 {
   left: 24px;
   bottom: 8px;
 }
+
 main {
-  padding: 0 24px;
+  padding: 0px;
+}
+
+p {
+  margin: 24px;
+}
+
+table {
+  border-collapse: collapse;
+  letter-spacing: 1px;
+  font-size: 0.8rem;
+  width: 100%;
+  align-items: left;
+}
+
+td, th {
+  border-top: 1px solid rgba(33, 36, 44, 0.08);
+  border-bottom: 1px solid rgba(33, 36, 44, 0.08);
+  padding: 20px 0px 20px 24px;
+  text-align: left;
+}
+
+th {
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: rgba(33, 36, 44, 0.64);
+}
+
+td {
+  color: #21242C;
+  font-size: 16px;
+  line-height: 22px;
+  letter-spacing: 0px;
+}
+select {
+  background-color: #ffffff;
+/* Off-Black (16%) */
+border: 1px solid rgba(33, 36, 44, 0.16);
+box-sizing: border-box;
+border-radius: 4px;
+width: 160px;
+height: 40px;
+-webkit-appearance: none;
+-moz-appearance: none;
+appearance: none;
+  background: url(/images/caret.png) 92% / 15% no-repeat #ffffff;
+  background-size: 10px 10px;
+  font-family: "Lato";
+  padding-left: 16px;
+  font-size: 16px;
+  line-height: 20px;
+  color: #21242C;
+
+}
+
+button {
+  width: 312px;
+  height: 40px;
+  display: block;
+  background: #1865F2;
+  border-radius: 4px;
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 20px;
+  color: #ffffff;
+  cursor: pointer;
 }
