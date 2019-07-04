@@ -60,7 +60,7 @@ table {
 td, th {
   border-top: 1px solid rgba(33, 36, 44, 0.08);
   border-bottom: 1px solid rgba(33, 36, 44, 0.08);
-  padding: 20px 0px 20px 24px;
+  padding: 16px 0px 16px 24px;
   text-align: left;
 }
 
@@ -80,17 +80,18 @@ td {
   line-height: 22px;
   letter-spacing: 0px;
 }
+
 select {
   background-color: #ffffff;
-/* Off-Black (16%) */
-border: 1px solid rgba(33, 36, 44, 0.16);
-box-sizing: border-box;
-border-radius: 4px;
-width: 160px;
-height: 40px;
--webkit-appearance: none;
--moz-appearance: none;
-appearance: none;
+  /* Off-Black (16%) */
+  border: 1px solid rgba(33, 36, 44, 0.16);
+  box-sizing: border-box;
+  border-radius: 4px;
+  width: 160px;
+  height: 40px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
   background: url(/images/caret.png) 92% / 15% no-repeat #ffffff;
   background-size: 10px 10px;
   font-family: "Lato";
@@ -98,7 +99,7 @@ appearance: none;
   font-size: 16px;
   line-height: 20px;
   color: #21242C;
-
+  cursor: pointer;
 }
 
 button {

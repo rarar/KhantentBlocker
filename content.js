@@ -1,9 +1,22 @@
-chrome.runtime.onMessage.addListener(
-  function(request, sender, sendResponse) {
-    if( request.message === "clicked_browser_action" ) {
-      console.log("hello there!");
-      // This line is new!
-      chrome.runtime.sendMessage({"message": "open_new_tab", "url": "http://rarar.com"});
-    }
-  }
-);
+let onward = document.getElementById('onward');
+
+onward.onclick = function(element) {
+  let facebook = document.getElementById('facebook').value;
+  console.log("facebook time limit = " + facebook);
+  let twitter = document.getElementById('twitter').value;
+  console.log("twitter time limit = " + twitter);
+  let instagram = document.getElementById('instagram').value;
+  console.log("instagram time limit = " + instagram);
+  let youtube = document.getElementById('youtube').value;
+  console.log("youtube time limit = " + youtube);
+  let linkedin = document.getElementById('linkedin').value;
+  console.log("linkedin time limit = " + linkedin);
+  let reddit = document.getElementById('reddit').value;
+  console.log("reddit time limit = " + reddit);
+  // send message to background script
+  chrome.runtime.sendMessage({
+    facebook_limit: facebook
+  }, function(response) {
+    console.log(response.farewell);
+  });
+};
