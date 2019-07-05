@@ -1,8 +1,8 @@
-
-// Listen for button click
+let limits = {};
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
-      console.log(request.facebook_limit);
-      //sendResponse({farewell: "goodbye"});
+      chrome.storage.sync.set({limits: request}, function() {
+      });
+      sendResponse({messageReceived: "limits saved"});
   }
 );
