@@ -3,7 +3,11 @@ let limits = {};
 
 window.onload = () => {
   chrome.storage.sync.get('limits', function(data) {
-    console.log("Getting limits from storage = " + JSON.stringify(data.limits));
+    limits = data.limits;
+    for (let limit in limits) {
+      console.log("limit " + limit + " and limits[limit] " + limits[limit]);
+      document.getElementById(limit).value = limits[limit];
+    }
   });
 }
 
