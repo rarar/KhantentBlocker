@@ -7,7 +7,7 @@
     "matches": ["*://www.facebook.com/*"],
     "js": ["content.js"]
   }],
-  "permissions": ["activeTab", "storage"],
+  "permissions": ["activeTab", "storage", "tabs"],
   "browser_action": {
     "default_icon": {
       "16": "images/icon16.png",

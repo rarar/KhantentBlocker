@@ -1,4 +1,4 @@
-let onward = document.getElementById('onward');
+let onward;
 let limits = {};
 
 window.onload = () => {
@@ -9,12 +9,11 @@ window.onload = () => {
       document.getElementById(limit).value = limits[limit];
     }
   });
+  onward = document.getElementById('onward');
+  onward.addEventListener("click", sendLimitsToBackground)
 }
 
-
-
-
-onward.onclick = function(element) {
+function sendLimitsToBackground() {
   let facebook_limit = document.getElementById('facebook').value;
   console.log("facebook time limit = " + facebook_limit);
   let twitter_limit = document.getElementById('twitter').value;
@@ -37,5 +36,39 @@ onward.onclick = function(element) {
     reddit: reddit_limit
   }, function(response) {
     console.log(response);
+    showLimitsSetMode();
   });
 };
+
+function showLimitsSetMode() {
+  // Swap facebook combobox
+  let fbcb = document.getElementById('facebook');
+  let fbTextLimit = document.createElement('span');
+  fbTextLimit.innerHTML = fbcb.value;
+  fbcb.parentNode.replaceChild(fbTextLimit, fbcb);
+  // Swap twitter combobox
+  let twcb = document.getElementById('twitter');
+  let twTextLimit = document.createElement('span');
+  twTextLimit.innerHTML = twcb.value;
+  twcb.parentNode.replaceChild(twTextLimit, twcb);
+  // Swap instagram combobox
+  let igcb = document.getElementById('instagram');
+  let igTextLimit = document.createElement('span');
+  igTextLimit.innerHTML = igcb.value;
+  igcb.parentNode.replaceChild(igTextLimit, igcb);
+  // Swap youtube combobox
+  let ytcb = document.getElementById('youtube');
+  let ytTextLimit = document.createElement('span');
+  ytTextLimit.innerHTML = ytcb.value;
+  ytcb.parentNode.replaceChild(ytTextLimit, ytcb);
+  // Swap linkedin combobox
+  let licb = document.getElementById('linkedin');
+  let liTextLimit = document.createElement('span');
+  liTextLimit.innerHTML = licb.value;
+  licb.parentNode.replaceChild(liTextLimit, licb);
+  // Swap reddit combobox
+  let redcb = document.getElementById('reddit');
+  let redTextLimit = document.createElement('span');
+  redTextLimit.innerHTML = redcb.value;
+  redcb.parentNode.replaceChild(redTextLimit, redcb);
+}

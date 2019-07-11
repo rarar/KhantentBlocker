@@ -61,6 +61,7 @@ td, th {
   border-top: 1px solid rgba(33, 36, 44, 0.08);
   border-bottom: 1px solid rgba(33, 36, 44, 0.08);
   padding: 16px 0px 16px 24px;
+  height: 36px;
   text-align: left;
 }
 
@@ -115,4 +116,8 @@ button {
   line-height: 20px;
   color: #ffffff;
   cursor: pointer;
+}
+
+span {
+  font-weight: 600;
 }
