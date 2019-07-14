@@ -111,6 +111,9 @@ function cleanValue(textToClean) {
   let prettyText = "";
 
   switch (true) {
+    case (textToClean===0):
+      prettyText = '<span style="color:#1865F2;">Khantent only!</span>';
+      break;
     case (textToClean < 60 && textToClean > 0):
       prettyText += textToClean + " min";
       break;
