@@ -1,5 +1,6 @@
 let onward;
 let limits = {};
+let fbcb, fbTextLimit, twcb, twTextLimit, igcb, igTextLimit, ytcb, ytTextLimit, licb, liTextLimit, redcb, redTextLimit;
 
 window.onload = () => {
   chrome.storage.sync.get('limits', function(data) {
@@ -10,7 +11,7 @@ window.onload = () => {
     }
   });
   onward = document.getElementById('onward');
-  onward.addEventListener("click", sendLimitsToBackground)
+  onward.addEventListener("click", sendLimitsToBackground);
 }
 
 function sendLimitsToBackground() {
@@ -41,34 +42,99 @@ function sendLimitsToBackground() {
 };
 
 function showLimitsSetMode() {
+  onward.removeEventListener("click", sendLimitsToBackground);
   // Swap facebook combobox
-  let fbcb = document.getElementById('facebook');
-  let fbTextLimit = document.createElement('span');
-  fbTextLimit.innerHTML = fbcb.value;
+  fbcb = document.getElementById('facebook');
+  fbTextLimit = document.createElement('span');
+  fbTextLimit.innerHTML = cleanValue(fbcb.value);
   fbcb.parentNode.replaceChild(fbTextLimit, fbcb);
   // Swap twitter combobox
-  let twcb = document.getElementById('twitter');
-  let twTextLimit = document.createElement('span');
-  twTextLimit.innerHTML = twcb.value;
+  twcb = document.getElementById('twitter');
+  twTextLimit = document.createElement('span');
+  twTextLimit.innerHTML = cleanValue(twcb.value);
   twcb.parentNode.replaceChild(twTextLimit, twcb);
   // Swap instagram combobox
-  let igcb = document.getElementById('instagram');
-  let igTextLimit = document.createElement('span');
-  igTextLimit.innerHTML = igcb.value;
+  igcb = document.getElementById('instagram');
+  igTextLimit = document.createElement('span');
+  igTextLimit.innerHTML = cleanValue(igcb.value);
   igcb.parentNode.replaceChild(igTextLimit, igcb);
   // Swap youtube combobox
-  let ytcb = document.getElementById('youtube');
-  let ytTextLimit = document.createElement('span');
-  ytTextLimit.innerHTML = ytcb.value;
+  ytcb = document.getElementById('youtube');
+  ytTextLimit = document.createElement('span');
+  ytTextLimit.innerHTML = cleanValue(ytcb.value);
   ytcb.parentNode.replaceChild(ytTextLimit, ytcb);
   // Swap linkedin combobox
-  let licb = document.getElementById('linkedin');
-  let liTextLimit = document.createElement('span');
-  liTextLimit.innerHTML = licb.value;
+  licb = document.getElementById('linkedin');
+  liTextLimit = document.createElement('span');
+  liTextLimit.innerHTML = cleanValue(licb.value);
   licb.parentNode.replaceChild(liTextLimit, licb);
   // Swap reddit combobox
-  let redcb = document.getElementById('reddit');
-  let redTextLimit = document.createElement('span');
-  redTextLimit.innerHTML = redcb.value;
+  redcb = document.getElementById('reddit');
+  redTextLimit = document.createElement('span');
+  redTextLimit.innerHTML = cleanValue(redcb.value);
   redcb.parentNode.replaceChild(redTextLimit, redcb);
+
+  // Update button
+  onward.innerHTML = "Edit my limits";
+  onward.addEventListener("click", editLimits);
+}
+
+function editLimits() {
+  onward.removeEventListener("click", editLimits);
+  fbTextLimit.parentNode.replaceChild(fbcb, fbTextLimit);
+  // fbcb.value = "";
+
+  twTextLimit.parentNode.replaceChild(twcb, twTextLimit);
+  // twcb.value = "";
+
+  igTextLimit.parentNode.replaceChild(igcb, igTextLimit);
+  // igcb.value = "";
+
+  ytTextLimit.parentNode.replaceChild(ytcb, ytTextLimit);
+  // ytcb.value = "";
+
+  liTextLimit.parentNode.replaceChild(licb, liTextLimit);
+  // licb.value = "";
+
+  redTextLimit.parentNode.replaceChild(redcb, redTextLimit);
+  // redcb.value = "";
+
+  // Update button
+  onward.innerHTML = "Onward!";
+  onward.addEventListener("click", sendLimitsToBackground);
+
+}
+
+// This makes the text look all nice
+function cleanValue(textToClean) {
+  console.log("textToClean = " + textToClean);
+  let prettyText = "";
+
+  switch (true) {
+    case (textToClean < 60 && textToClean > 0):
+      prettyText += textToClean + " min";
+      break;
+    case (textToClean >= 60 && textToClean < 120):
+      prettyText = "1 hr";
+      break;
+    case (textToClean >= 120 && textToClean < 180):
+      prettyText = "2 hrs";
+      break;
+    case (textToClean >= 180):
+      prettyText = "3 hrs";
+      break;
+    default:
+      prettyText = '<span style="color:rgba(33, 36, 44, 0.64);font-style:italic;font-weight:400;">No limit set</span>';
+      break;
+  }
+
+  if (textToClean % 60 > 0 && textToClean > 60) {
+    prettyText += " and " + (textToClean % 60) + " min";
+  }
+
+  if (prettyText != '<span style="color:rgba(33, 36, 44, 0.64);font-style:italic;font-weight:400;">No limit set</span>') {
+    prettyText += " left";
+  }
+
+  return prettyText;
 }

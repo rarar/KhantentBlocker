@@ -60,8 +60,7 @@ table {
 td, th {
   border-top: 1px solid rgba(33, 36, 44, 0.08);
   border-bottom: 1px solid rgba(33, 36, 44, 0.08);
-  padding: 16px 0px 16px 24px;
-  height: 36px;
+  padding: 0px 0px 0px 24px;
   text-align: left;
 }
 
@@ -73,6 +72,7 @@ th {
   letter-spacing: 0.6px;
   text-transform: uppercase;
   color: rgba(33, 36, 44, 0.64);
+  height: 56px;
 }
 
 td {
@@ -80,6 +80,7 @@ td {
   font-size: 16px;
   line-height: 22px;
   letter-spacing: 0px;
+  height: 64px;
 }
 
 select {
@@ -116,8 +117,12 @@ button {
   line-height: 20px;
   color: #ffffff;
   cursor: pointer;
+  margin: 16px 0px;
 }
 
 span {
+  display: block;
+  text-align: left;
   font-weight: 600;
+  width: 160px;
 }
