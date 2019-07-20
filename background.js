@@ -1,4 +1,17 @@
 const facebookRegex = new RegExp("(?:(?:http|https):\/\/)?(?:www.)?facebook.com\/?");
+const twitterRegex = new RegExp("(?:(?:http|https):\/\/)?(?:www.)?twitter.com\/?");
+const instagramRegex = new RegExp("(?:(?:http|https):\/\/)?(?:www.)?instagram.com\/?");
+const youtubeRegex = new RegExp("(?:(?:http|https):\/\/)?(?:www.)?youtube.com\/?");
+const linkedinRegex = new RegExp("(?:(?:http|https):\/\/)?(?:www.)?linkedin.com\/?");
+const redditRegex = new RegExp("(?:(?:http|https):\/\/)?(?:www.)?reddit.com\/?");
+
+let facebookOff = false;
+let twitterOff = false;
+let instagramOff = false;
+let youtubeOff = false;
+let linkedinOff = false;
+let redditOff = false;
+
 
 // When the extension is installed do this
 chrome.runtime.onInstalled.addListener(function() {
@@ -21,15 +34,24 @@ chrome.runtime.onMessage.addListener(
     chrome.storage.sync.set({
       limits: request
     }, function() {
-      console.log("request is " + JSON.stringify(request));
       limits = request;
-      console.log("limits are " + JSON.stringify(request));
+      //console.log("limits are " + JSON.stringify(request));
+      setTimers(limits);
     });
     sendResponse({
       messageReceived: "limits saved"
     });
   }
 );
+
+// Set up timers here
+function setTimers(limits) {
+  console.log(limits["facebook"]);
+  let facebookTimer = setTimeout(()=>{
+    facebookOff = true;
+  },(limits["facebook"]*100));
+
+}
 
 // Every time the user switches tabs
 chrome.tabs.onSelectionChanged.addListener(function() {
@@ -48,10 +70,10 @@ chrome.tabs.onUpdated.addListener(function() {
     currentWindow: true
   }, function(tab) {
     console.log("onUpdated:: " + tab[0].url);
-    let limitReached = checkUrl(tab[0].url, 0, "facebook");
-    console.log("limitReached = " + limitReached);
-    if (limitReached) {
-      console.log("LIMIT REACHED!");;
+    let isFacebookURL = checkUrl(tab[0].url, 0, "facebook");
+    console.log("on the right URL = " + isFacebookURL);
+    if (isFacebookURL && facebookOff) {
+      console.log("You're on facebook and your time is up!");;
       chrome.tabs.update(tab[0].id, {
         url: getRandomContent()
       });
