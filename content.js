@@ -64,7 +64,7 @@ function showLimitsSetMode() {
   // Swap facebook combobox
   fbcb = document.getElementById('facebook');
   fbTextLimit = document.createElement('span');
-  fbTextLimit.innerHTML = cleanValue(fbcb.value);
+  // fbTextLimit.innerHTML = cleanValue(fbcb.value);
   fbcb.parentNode.replaceChild(fbTextLimit, fbcb);
   // Swap twitter combobox
   twcb = document.getElementById('twitter');
@@ -99,6 +99,7 @@ function showLimitsSetMode() {
   // Display countdown
   // TO DO GET MOST RECENT TIME
   displayTimerInterval = setInterval(() => {
+    console.log(cleanValue(limits["facebook"]));
     chrome.storage.sync.get('limits', function(data) {
       limits = data.limits;
       console.log("limits['facebook'] = " + limits["facebook"]);

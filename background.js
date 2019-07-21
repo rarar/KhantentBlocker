@@ -60,10 +60,17 @@ function setTimers(limits) {
   // let facebookTimer = setTimeout(()=>{
   //   facebookOff = true;
   // },(limits["facebook"]));
+  
   // TO DO NEED TO SAVE TIME
   clearInterval(facebookTimeInterval);
   facebookTimeInterval = setInterval(()=>{
-    if (isFacebookURL) limits["facebook"] -= 1000;
+    if (isFacebookURL) {
+      limits["facebook"] -= 1000;
+      if (limits["facebook"] <= 0) {
+        clearInterval(facebookTimeInterval);
+        limits["facebook"] = 0;
+      }
+    }
     chrome.storage.sync.set({limits: limits}, ()=>{
       console.log("facebook time remaining = " + limits["facebook"]);
     })
@@ -78,7 +85,14 @@ chrome.tabs.onSelectionChanged.addListener(function() {
     currentWindow: true
   }, function(tab) {
     console.log("onSelectionChanged:: " + tab[0].url);
-    let redirect = checkUrl(tab[0].url, 0)
+    isFacebookURL = checkUrl(tab[0].url, 0, "facebook");
+    console.log("on the right URL = " + isFacebookURL);
+    if (isFacebookURL && facebookOff) {
+      console.log("You're on facebook and your time is up!");;
+      chrome.tabs.update(tab[0].id, {
+        url: getRandomContent()
+      });
+    }
   });
 })
 
