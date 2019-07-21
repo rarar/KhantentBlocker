@@ -1,18 +1,36 @@
 let onward;
 let limits = {};
 let fbcb, fbTextLimit, twcb, twTextLimit, igcb, igTextLimit, ytcb, ytTextLimit, licb, liTextLimit, redcb, redTextLimit;
+let displayTimerInterval;
+let editMode = false;
 
-window.onload = () => {
-  chrome.storage.sync.get('limits', function(data) {
+window.addEventListener('load', () => {
+  chrome.storage.sync.get('limits', (data) => {
     limits = data.limits;
+
     for (let limit in limits) {
       console.log("limit " + limit + " and limits[limit] " + limits[limit]);
       document.getElementById(limit).value = limits[limit];
     }
+
+    let isEmpty = Object.values(limits).every(x => (x === null || x === ''));
+    console.log("is limits empty? " + isEmpty);
+    onward = document.getElementById('onward');
+    onward.addEventListener("click", sendLimitsToBackground);
+
+    if (isEmpty) {
+      // Object is empty (Would return true in this example)
+      editMode = false;
+      console.log("edit mode should be OFF!");
+    } else {
+      // Object is NOT empty
+      editMode = true;
+      console.log("edit mode should be ON!");
+      showLimitsSetMode();
+    }
   });
-  onward = document.getElementById('onward');
-  onward.addEventListener("click", sendLimitsToBackground);
-}
+
+});
 
 function sendLimitsToBackground() {
   let facebook_limit = document.getElementById('facebook').value;
@@ -77,27 +95,37 @@ function showLimitsSetMode() {
   // Update button
   onward.innerHTML = "Edit my limits";
   onward.addEventListener("click", editLimits);
+
+  // Display countdown
+  // TO DO GET MOST RECENT TIME
+  displayTimerInterval = setInterval(() => {
+    chrome.storage.sync.get('limits', function(data) {
+      limits = data.limits;
+      console.log("limits['facebook'] = " + limits["facebook"]);
+      fbTextLimit.innerHTML = cleanValue(limits["facebook"]);
+    });
+  }, 1000);
 }
 
 function editLimits() {
   onward.removeEventListener("click", editLimits);
   fbTextLimit.parentNode.replaceChild(fbcb, fbTextLimit);
-  // fbcb.value = "";
+  fbcb.value = "";
 
   twTextLimit.parentNode.replaceChild(twcb, twTextLimit);
-  // twcb.value = "";
+  twcb.value = "";
 
   igTextLimit.parentNode.replaceChild(igcb, igTextLimit);
-  // igcb.value = "";
+  igcb.value = "";
 
   ytTextLimit.parentNode.replaceChild(ytcb, ytTextLimit);
-  // ytcb.value = "";
+  ytcb.value = "";
 
   liTextLimit.parentNode.replaceChild(licb, liTextLimit);
-  // licb.value = "";
+  licb.value = "";
 
   redTextLimit.parentNode.replaceChild(redcb, redTextLimit);
-  // redcb.value = "";
+  redcb.value = "";
 
   // Update button
   onward.innerHTML = "Onward!";
@@ -105,25 +133,44 @@ function editLimits() {
 
 }
 
+/* ============================================================
+ *  ============================================================
+ *  ===================== Helper Functions =====================
+ *  ============================================================
+ *  ============================================================
+ */
+
+function cleanValue(duration) {
+  let milliseconds = parseInt((duration % 1000) / 100),
+    seconds = Math.floor((duration / 1000) % 60),
+    minutes = Math.floor((duration / (1000 * 60)) % 60),
+    hours = Math.floor((duration / (1000 * 60 * 60)) % 24);
+
+  hours = (hours < 10) ? "0" + hours : hours;
+  minutes = (minutes < 10) ? "0" + minutes : minutes;
+  seconds = (seconds < 10) ? "0" + seconds : seconds;
+
+  return hours + ":" + minutes + ":" + seconds + " left";
+}
 // This makes the text look all nice
-function cleanValue(textToClean) {
+function altCleanValue(textToClean) {
   console.log("textToClean = " + textToClean);
   let prettyText = "";
 
   switch (true) {
-    case (textToClean===0):
+    case (textToClean === 0):
       prettyText = '<span style="color:#1865F2;">Khantent only!</span>';
       break;
-    case (textToClean < 60 && textToClean > 0):
+    case (textToClean < 3600000 && textToClean > 0):
       prettyText += textToClean + " min";
       break;
-    case (textToClean >= 60 && textToClean < 120):
+    case (textToClean >= 3600000 && textToClean < 7200000):
       prettyText = "1 hr";
       break;
-    case (textToClean >= 120 && textToClean < 180):
+    case (textToClean >= 7200000 && textToClean < 10800000):
       prettyText = "2 hrs";
       break;
-    case (textToClean >= 180):
+    case (textToClean >= 10800000):
       prettyText = "3 hrs";
       break;
     default:

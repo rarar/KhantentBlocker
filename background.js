@@ -12,6 +12,16 @@ let youtubeOff = false;
 let linkedinOff = false;
 let redditOff = false;
 
+let isFacebookURL = false;
+let isTwitterURL = false;
+let isInstagramURL = false;
+let isYoutubeURL = false;
+let isLinkedinURL = false;
+let isRedditURL = false;
+
+let facebookTimeInterval;
+
+let limits, editMode = false;
 
 // When the extension is installed do this
 chrome.runtime.onInstalled.addListener(function() {
@@ -47,10 +57,18 @@ chrome.runtime.onMessage.addListener(
 // Set up timers here
 function setTimers(limits) {
   console.log(limits["facebook"]);
-  let facebookTimer = setTimeout(()=>{
-    facebookOff = true;
-  },(limits["facebook"]*100));
+  // let facebookTimer = setTimeout(()=>{
+  //   facebookOff = true;
+  // },(limits["facebook"]));
+  // TO DO NEED TO SAVE TIME
+  clearInterval(facebookTimeInterval);
+  facebookTimeInterval = setInterval(()=>{
+    if (isFacebookURL) limits["facebook"] -= 1000;
+    chrome.storage.sync.set({limits: limits}, ()=>{
+      console.log("facebook time remaining = " + limits["facebook"]);
+    })
 
+  }, 1000);
 }
 
 // Every time the user switches tabs
@@ -70,7 +88,7 @@ chrome.tabs.onUpdated.addListener(function() {
     currentWindow: true
   }, function(tab) {
     console.log("onUpdated:: " + tab[0].url);
-    let isFacebookURL = checkUrl(tab[0].url, 0, "facebook");
+    isFacebookURL = checkUrl(tab[0].url, 0, "facebook");
     console.log("on the right URL = " + isFacebookURL);
     if (isFacebookURL && facebookOff) {
       console.log("You're on facebook and your time is up!");;
