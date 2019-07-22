@@ -19,7 +19,7 @@ let isYoutubeURL = false;
 let isLinkedinURL = false;
 let isRedditURL = false;
 
-let facebookTimeInterval;
+let facebookTimeInterval, facebookCountdown;
 
 let limits, editMode = false;
 
@@ -60,10 +60,10 @@ function setTimers(limits) {
   // let facebookTimer = setTimeout(()=>{
   //   facebookOff = true;
   // },(limits["facebook"]));
-  
+
   // TO DO NEED TO SAVE TIME
   clearInterval(facebookTimeInterval);
-  facebookTimeInterval = setInterval(()=>{
+  facebookCountdown = ()=>{
     if (isFacebookURL) {
       limits["facebook"] -= 1000;
       if (limits["facebook"] <= 0) {
@@ -74,8 +74,9 @@ function setTimers(limits) {
     chrome.storage.sync.set({limits: limits}, ()=>{
       console.log("facebook time remaining = " + limits["facebook"]);
     })
+  };
 
-  }, 1000);
+  //facebookTimeInterval = setInterval(facebookCountdown, 1000);
 }
 
 // Every time the user switches tabs
@@ -86,7 +87,10 @@ chrome.tabs.onSelectionChanged.addListener(function() {
   }, function(tab) {
     console.log("onSelectionChanged:: " + tab[0].url);
     isFacebookURL = checkUrl(tab[0].url, 0, "facebook");
-    console.log("on the right URL = " + isFacebookURL);
+    clearInterval(facebookTimeInterval);
+    if (isFacebookURL) {
+      facebookTimeInterval = setInterval(facebookCountdown, 1000);
+    }
     if (isFacebookURL && facebookOff) {
       console.log("You're on facebook and your time is up!");;
       chrome.tabs.update(tab[0].id, {
@@ -103,7 +107,10 @@ chrome.tabs.onUpdated.addListener(function() {
   }, function(tab) {
     console.log("onUpdated:: " + tab[0].url);
     isFacebookURL = checkUrl(tab[0].url, 0, "facebook");
-    console.log("on the right URL = " + isFacebookURL);
+    clearInterval(facebookTimeInterval);
+    if (isFacebookURL) {
+      facebookTimeInterval = setInterval(facebookCountdown, 1000);
+    }
     if (isFacebookURL && facebookOff) {
       console.log("You're on facebook and your time is up!");;
       chrome.tabs.update(tab[0].id, {
