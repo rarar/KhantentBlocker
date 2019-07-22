@@ -108,7 +108,7 @@ function showLimitsSetMode() {
       console.log("limits['facebook'] = " + limits["facebook"]);
       fbTextLimit.innerHTML = cleanValue(limits["facebook"]);
     });
-  }, 1000);
+  }, 100);
 }
 
 function editLimits() {
@@ -137,6 +137,7 @@ function editLimits() {
 
   onward.classList.add("editMode");
   document.getElementById('cancel-button').style.display = "inline";
+  document.getElementById('cancel-button').addEventListener("click", showLimitsSetMode);
 
 }
 
