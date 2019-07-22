@@ -107,7 +107,7 @@ select {
 button {
   width: 312px;
   height: 40px;
-  display: block;
+  display: inline;
   background: #1865F2;
   border-radius: 4px;
   font-family: "Lato";
@@ -120,9 +120,30 @@ button {
   margin: 16px 0px;
 }
 
+.editMode {
+  width: 249px;
+  margin-left: 16px;
+  right: 0;
+}
+
 span {
   display: block;
   text-align: left;
   font-weight: 600;
   width: 160px;
+}
+
+span#cancel-button {
+  display: none;
+  text-align: center;
+  color: #1865F2;
+  cursor: pointer;
+}
+
+span#cancel-button:hover {
+  text-decoration: underline;
+}
+
+span#cancel-button:active {
+  color: #0A2A66;
 }

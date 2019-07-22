@@ -96,6 +96,9 @@ function showLimitsSetMode() {
   onward.innerHTML = "Edit my limits";
   onward.addEventListener("click", editLimits);
 
+  onward.classList.remove("editMode");
+  document.getElementById('cancel-button').style.display = "none";
+
   // Display countdown
   // TO DO GET MOST RECENT TIME
   displayTimerInterval = setInterval(() => {
@@ -131,6 +134,9 @@ function editLimits() {
   // Update button
   onward.innerHTML = "Onward!";
   onward.addEventListener("click", sendLimitsToBackground);
+
+  onward.classList.add("editMode");
+  document.getElementById('cancel-button').style.display = "inline";
 
 }
 
