@@ -49,6 +49,12 @@ p {
   margin: 24px;
 }
 
+p.small-text {
+  margin-top: -16px;
+  font-size: 14px;
+  color: rgba(33, 36, 44, .64);
+}
+
 table {
   border-collapse: collapse;
   letter-spacing: 1px;

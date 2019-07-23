@@ -21,6 +21,24 @@ let isRedditURL = false;
 
 let facebookTimeInterval, facebookCountdown;
 
+// let timeIntervals = {
+//   facebook: facebookTimeInterval,
+//   twitter: twitterTimeInterval,
+//   instagram: instagramTimeInterval,
+//   youtube: youtubeTimeInterval,
+//   linkedin: linkedinTimeInterval,
+//   reddit: redditTimeInterval
+// };
+//
+// let countdowns = {
+//   facebook: facebookCountdown,
+//   twitter: twitterCountdown,
+//   instagram: instagramCountdown,
+//   youtube: youtubeCountdown,
+//   linkedin: linkedinCountdown,
+//   reddit: redditCountdown
+// };
+
 let limits, editMode = false;
 
 // When the extension is installed do this
@@ -56,27 +74,28 @@ chrome.runtime.onMessage.addListener(
 
 // Set up timers here
 function setTimers(limits) {
-  console.log(limits["facebook"]);
-  // let facebookTimer = setTimeout(()=>{
-  //   facebookOff = true;
-  // },(limits["facebook"]));
+  // UPDATE THIS!
+  // for (let limit in limits) {
+  //   if (limits[limit]==null) retun;
+  // }
 
-  // TO DO NEED TO SAVE TIME
+
+  console.log("setTimers:: " + limits["facebook"]);
+  if (limits["facebook"]==null) return;
   clearInterval(facebookTimeInterval);
   facebookCountdown = ()=>{
     if (isFacebookURL) {
       limits["facebook"] -= 1000;
       if (limits["facebook"] <= 0) {
         clearInterval(facebookTimeInterval);
-        limits["facebook"] = 0;
+        limits["facebook"] = -1;
+        facebookOff = true;
       }
     }
     chrome.storage.sync.set({limits: limits}, ()=>{
       console.log("facebook time remaining = " + limits["facebook"]);
     })
   };
-
-  //facebookTimeInterval = setInterval(facebookCountdown, 1000);
 }
 
 // Every time the user switches tabs
@@ -87,10 +106,7 @@ chrome.tabs.onSelectionChanged.addListener(function() {
   }, function(tab) {
     console.log("onSelectionChanged:: " + tab[0].url);
     isFacebookURL = checkUrl(tab[0].url, 0, "facebook");
-    clearInterval(facebookTimeInterval);
-    if (isFacebookURL) {
-      facebookTimeInterval = setInterval(facebookCountdown, 1000);
-    }
+    startAndStopTimers();
     if (isFacebookURL && facebookOff) {
       console.log("You're on facebook and your time is up!");;
       chrome.tabs.update(tab[0].id, {
@@ -107,18 +123,23 @@ chrome.tabs.onUpdated.addListener(function() {
   }, function(tab) {
     console.log("onUpdated:: " + tab[0].url);
     isFacebookURL = checkUrl(tab[0].url, 0, "facebook");
-    clearInterval(facebookTimeInterval);
-    if (isFacebookURL) {
-      facebookTimeInterval = setInterval(facebookCountdown, 1000);
-    }
     if (isFacebookURL && facebookOff) {
       console.log("You're on facebook and your time is up!");;
       chrome.tabs.update(tab[0].id, {
         url: getRandomContent()
       });
+    } else {
+        startAndStopTimers();
     }
   });
-})
+});
+
+function startAndStopTimers() {
+  clearInterval(facebookTimeInterval);
+  if (isFacebookURL && !facebookOff) {
+    facebookTimeInterval = setInterval(facebookCountdown, 1000);
+  }
+}
 
 // Check the current URL against the set up limits
 function checkUrl(url, limit, socialNetwork) {
@@ -126,6 +147,7 @@ function checkUrl(url, limit, socialNetwork) {
   switch (socialNetwork) {
     case "facebook":
       reachedLimit = ((facebookRegex.test(url) == true) && (limit <= 0)) ? true : false;
+      console.log("limit reached = " + reachedLimit);
       break;
     default:
       reachedLimit = false;
