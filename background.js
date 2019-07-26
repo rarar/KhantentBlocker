@@ -21,6 +21,8 @@ let isRedditURL = false;
 
 let facebookTimeInterval, facebookCountdown, twitterTimeInterval, twitterCountdown, instagramTimeInterval, instagramCountdown, youtubeTimeInterval, youtubeCountdown, linkedinTimeInterval, linkedinCountdown, redditTimeInterval, redditCountdown;
 
+let currentDay;
+
 let regexes = {
   facebook: facebookRegex,
   twitter: twitterRegex,
@@ -66,8 +68,6 @@ let limitChecks = {
   reddit: redditOff
 }
 
-let limits, editMode = false;
-
 // When the extension is installed do this
 chrome.runtime.onInstalled.addListener(function() {
   chrome.storage.local.get('limits', function(data) {
@@ -100,6 +100,8 @@ chrome.runtime.onMessage.addListener(
 
 // Set up timers here
 function setTimers(limits) {
+  currentDay = new Date().getDay();
+  console.log("currentDay = " + currentDay);
   console.log("setting timers");
   for (let limit in limits) {
     if (limits[limit] == null) continue;
@@ -127,6 +129,14 @@ function setTimers(limits) {
 
 // Every time the user switches tabs
 chrome.tabs.onActivated.addListener(function() {
+  if (new Date().getDay() != currentDay) {
+    limits = null;
+    chrome.storage.local.set({
+      limits: limits
+    }, () => {
+      console.log("setting limits to null");
+    })
+  }
   chrome.tabs.query({
     active: true,
     currentWindow: true
