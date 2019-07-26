@@ -19,31 +19,58 @@ let isYoutubeURL = false;
 let isLinkedinURL = false;
 let isRedditURL = false;
 
-let facebookTimeInterval, facebookCountdown;
+let facebookTimeInterval, facebookCountdown, twitterTimeInterval, twitterCountdown, instagramTimeInterval, instagramCountdown, youtubeTimeInterval, youtubeCountdown, linkedinTimeInterval, linkedinCountdown, redditTimeInterval, redditCountdown;
 
-// let timeIntervals = {
-//   facebook: facebookTimeInterval,
-//   twitter: twitterTimeInterval,
-//   instagram: instagramTimeInterval,
-//   youtube: youtubeTimeInterval,
-//   linkedin: linkedinTimeInterval,
-//   reddit: redditTimeInterval
-// };
-//
-// let countdowns = {
-//   facebook: facebookCountdown,
-//   twitter: twitterCountdown,
-//   instagram: instagramCountdown,
-//   youtube: youtubeCountdown,
-//   linkedin: linkedinCountdown,
-//   reddit: redditCountdown
-// };
+let regexes = {
+  facebook: facebookRegex,
+  twitter: twitterRegex,
+  instagram: instagramRegex,
+  youtube: youtubeRegex,
+  linkedin: linkedinRegex,
+  reddit: redditRegex
+}
+
+let timers = {
+  facebook: facebookTimeInterval,
+  twitter: twitterTimeInterval,
+  instagram: instagramTimeInterval,
+  youtube: youtubeTimeInterval,
+  linkedin: linkedinTimeInterval,
+  reddit: redditTimeInterval
+}
+
+let countdowns = {
+  facebook: facebookCountdown,
+  twitter: twitterCountdown,
+  instagram: instagramCountdown,
+  youtube: youtubeCountdown,
+  linkedin: linkedinCountdown,
+  reddit: redditCountdown
+}
+
+let urlChecks = {
+  facebook: isFacebookURL,
+  twitter: isTwitterURL,
+  instagram: isInstagramURL,
+  youtube: isYoutubeURL,
+  linkedin: isLinkedinURL,
+  reddit: isRedditURL
+}
+
+let limitChecks = {
+  facebook: facebookOff,
+  twitter: twitterOff,
+  instagram: instagramOff,
+  youtube: youtubeOff,
+  linkedin: linkedinOff,
+  reddit: redditOff
+}
 
 let limits, editMode = false;
 
 // When the extension is installed do this
 chrome.runtime.onInstalled.addListener(function() {
-  chrome.storage.sync.get('limits', function(data) {
+  chrome.storage.local.get('limits', function(data) {
     limits = data;
     console.log("limits are " + JSON.stringify(limits));
   });
@@ -59,11 +86,10 @@ chrome.runtime.onInstalled.addListener(function() {
 // Every time the user updates limits or takes action on the popup
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
-    chrome.storage.sync.set({
+    chrome.storage.local.set({
       limits: request
     }, function() {
       limits = request;
-      //console.log("limits are " + JSON.stringify(request));
       setTimers(limits);
     });
     sendResponse({
@@ -74,86 +100,75 @@ chrome.runtime.onMessage.addListener(
 
 // Set up timers here
 function setTimers(limits) {
-  // UPDATE THIS!
-  // for (let limit in limits) {
-  //   if (limits[limit]==null) retun;
-  // }
-
-
-  console.log("setTimers:: " + limits["facebook"]);
-  if (limits["facebook"]==null) return;
-  clearInterval(facebookTimeInterval);
-  facebookCountdown = ()=>{
-    if (isFacebookURL) {
-      limits["facebook"] -= 1000;
-      if (limits["facebook"] <= 0) {
-        clearInterval(facebookTimeInterval);
-        limits["facebook"] = -1;
-        facebookOff = true;
+  console.log("setting timers");
+  for (let limit in limits) {
+    if (limits[limit] == null) continue;
+    clearInterval(timers[limit]);
+    countdowns[limit] = () => {
+      if (urlChecks[limit]) {
+        limits[limit] -= 1000;
+        console.log("remaining time on " + limit + " = " + limits[limit]);
+        if (limits[limit] <= 0) {
+          clearInterval(timers[limit]);
+          limits[limit] = -1;
+          limitChecks[limit] = true;
+        }
       }
+      chrome.storage.local.set({
+        limits: limits
+      }, () => {
+        console.log(limit + " time remaining = " + limits[limit]);
+      })
     }
-    chrome.storage.sync.set({limits: limits}, ()=>{
-      console.log("facebook time remaining = " + limits["facebook"]);
-    })
-  };
-}
+  }
+
+
+};
 
 // Every time the user switches tabs
-chrome.tabs.onSelectionChanged.addListener(function() {
+chrome.tabs.onActivated.addListener(function() {
   chrome.tabs.query({
     active: true,
     currentWindow: true
   }, function(tab) {
-    console.log("onSelectionChanged:: " + tab[0].url);
-    isFacebookURL = checkUrl(tab[0].url, 0, "facebook");
-    startAndStopTimers();
-    if (isFacebookURL && facebookOff) {
-      console.log("You're on facebook and your time is up!");;
-      chrome.tabs.update(tab[0].id, {
-        url: getRandomContent()
-      });
+    console.log("onActivated:: " + tab[0].url);
+    for (let limit in limits) {
+      urlChecks[limit] = regexes[limit].test(tab[0].url);
+      clearInterval(timers[limit]);
+      if (urlChecks[limit] && !limitChecks[limit]) {
+        console.log("setting interval for " + limit);
+        timers[limit] = setInterval(countdowns[limit], 1000);
+      }
     }
+
   });
 })
 
+// Every time a tab updates
 chrome.tabs.onUpdated.addListener(function() {
   chrome.tabs.query({
     active: true,
     currentWindow: true
   }, function(tab) {
     console.log("onUpdated:: " + tab[0].url);
-    isFacebookURL = checkUrl(tab[0].url, 0, "facebook");
-    if (isFacebookURL && facebookOff) {
-      console.log("You're on facebook and your time is up!");;
-      chrome.tabs.update(tab[0].id, {
-        url: getRandomContent()
-      });
-    } else {
-        startAndStopTimers();
+    for (let limit in limits) {
+      //urlChecks[limit] = checkUrl(tab[0].url, limits[limit], limit);
+      urlChecks[limit] = regexes[limit].test(tab[0].url);
+      if (urlChecks[limit] && limitChecks[limit]) {
+        console.log("You're on " + limit + " and your time is up!");
+        chrome.tabs.update(tab[0].id, {
+          url: getRandomContent()
+        });
+      } else {
+        clearInterval(timers[limit]);
+        if (urlChecks[limit] && !limitChecks[limit]) {
+          console.log("we're setting the timer for " + limit);
+          timers[limit] = setInterval(countdowns[limit], 1000);
+        }
+      }
     }
   });
 });
-
-function startAndStopTimers() {
-  clearInterval(facebookTimeInterval);
-  if (isFacebookURL && !facebookOff) {
-    facebookTimeInterval = setInterval(facebookCountdown, 1000);
-  }
-}
-
-// Check the current URL against the set up limits
-function checkUrl(url, limit, socialNetwork) {
-  let reachedLimit = false;
-  switch (socialNetwork) {
-    case "facebook":
-      reachedLimit = ((facebookRegex.test(url) == true) && (limit <= 0)) ? true : false;
-      console.log("limit reached = " + reachedLimit);
-      break;
-    default:
-      reachedLimit = false;
-  }
-  return reachedLimit;
-}
 
 function getRandomContent() {
   return "http://khanacademy.org";

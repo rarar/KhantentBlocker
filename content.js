@@ -5,16 +5,21 @@ let displayTimerInterval;
 let editMode = false;
 
 window.addEventListener('load', () => {
-  chrome.storage.sync.get('limits', (data) => {
+  chrome.storage.local.get('limits', (data) => {
     limits = data.limits;
-
+    console.log("limits = " +limits);
     for (let limit in limits) {
-      // console.log("limit " + limit + " and limits[limit] " + limits[limit]);
+      console.log("limit " + limit + " and limits[limit] " + limits[limit]);
       if (limits[limit]==null) document.getElementById(limit).value = "";
       else document.getElementById(limit).value = limits[limit];
     }
+    let isEmpty
+    if (limits == undefined) {
+      isEmpty = true;
+    } else {
+      isEmpty = Object.values(limits).every(x => (x === null || x === ''));
+    }
 
-    let isEmpty = Object.values(limits).every(x => (x === null || x === ''));
     console.log("is limits empty? " + isEmpty);
     onward = document.getElementById('onward');
     onward.addEventListener("click", sendLimitsToBackground);
@@ -114,7 +119,7 @@ function showLimitsSetMode() {
   // Display countdown
   // TO DO GET MOST RECENT TIME
   displayTimerInterval = setInterval(() => {
-    chrome.storage.sync.get('limits', function(data) {
+    chrome.storage.local.get('limits', function(data) {
       limits = data.limits;
       fbTextLimit.innerHTML = cleanValue(limits["facebook"]);
       twTextLimit.innerHTML = cleanValue(limits["twitter"]);
