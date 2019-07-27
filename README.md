@@ -6,8 +6,8 @@ First, set your limits on your favorite social media sites. When your time's up,
 <img src="images/Extension.png"
      alt="Khantent Blocker"
      width="35%"
-     style="float: left; margin: 10%" />
+     style="float: left; margin: 25%" />
 <img src="images/Extension-1.png"
     alt="Khantent Blocker"
     width="35%"
-    style="float: left; margin: 10%" />
+    style="float: left; margin: 25%" />
