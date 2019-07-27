@@ -5,9 +5,9 @@ Next time you get distracted, why not learn something new? Khantent Blocker is a
 First, set your limits on your favorite social media sites. When your time's up, if you try to access a social media platform that has an enforced limit, the extension will serve up a random piece of Khan Academy content.
 <img src="images/Extension.png"
      alt="Khantent Blocker"
-     width="50%"
+     width="30%"
      style="float: left; margin-right: 10px;" />
 <img src="images/Extension-1.png"
     alt="Khantent Blocker"
-    width="50%"
+    width="30%"
     style="float: left; margin-right: 10px;" />
