@@ -5,6 +5,73 @@ const youtubeRegex = new RegExp("(?:(?:http|https):\/\/)?(?:www.)?youtube.com\/?
 const linkedinRegex = new RegExp("(?:(?:http|https):\/\/)?(?:www.)?linkedin.com\/?");
 const redditRegex = new RegExp("(?:(?:http|https):\/\/)?(?:www.)?reddit.com\/?");
 
+const kaslugs = [
+  "math/early-math",
+  "math/arithmetic",
+  "math/pre-algebra",
+  "math/algebra",
+  "math/geometry",
+  "math/algebra2",
+  "math/trigonometry",
+  "math/precalculus",
+  "math/statistics-probability",
+  "math/ap-calculus-ab",
+  "math/ap-calculus-bc",
+  "math/ap-statistics",
+  "math/multivariable-calculus",
+  "math/differential-equations",
+  "math/linear-algebra",
+  "math/cc-kindergarten-math",
+  "kids",
+  "math/cc-1st-grade-math",
+  "math/cc-2nd-grade-math",
+  "math/cc-third-grade-math",
+  "math/cc-fourth-grade-math",
+  "math/cc-fifth-grade-math",
+  "math/cc-sixth-grade-math",
+  "math/cc-seventh-grade-math",
+  "math/cc-eighth-grade-math",
+  "math/illustrative-math",
+  "math/engageny",
+  "math/high-school-math",
+  "science/physics",
+  "science/physics/ap-physics-1",
+  "science/physics/ap-physics-2",
+  "science/physics/cosmology-and-astronomy",
+  "science/chemistry",
+  "science/chemistry/ap-chemistry",
+  "science/organic-chemistry",
+  "science/biology",
+  "science/high-school-biology",
+  "science/ap-biology",
+  "science/health-and-medicine",
+  "science/electrical-engineering",
+  "computing/computer-programming",
+  "computing/computer-science",
+  "computing/ap-computer-science-principles",
+  "hourofcode",
+  "partner-content/pixar",
+  "humanities/us-history",
+  "humanities/us-history/ap-us-history",
+  "humanities/world-history",
+  "humanities/ap-world-history",
+  "humanities/us-government-and-civics",
+  "humanities/ap-us-government-and-politics",
+  "humanities/art-history",
+  "humanities/ap-art-history",
+  "humanities/grammar",
+  "economics-finance-domain/ap-macroeconomics",
+  "economics-finance-domain/macroeconomics",
+  "economics-finance-domain/microeconomics",
+  "economics-finance-domain/ap-microeconomics",
+  "economics-finance-domain/core-finance",
+  "college-admissions",
+  "college-careers-more/career-content",
+  "college-careers-more/personal-finance",
+  "college-careers-more/entrepreneurship2",
+  "learnstorm-growth-mindset-activities-us"
+];
+
 let facebookOff = false;
 let twitterOff = false;
 let instagramOff = false;
@@ -181,5 +248,5 @@ chrome.tabs.onUpdated.addListener(function() {
 });
 
 function getRandomContent() {
-  return "http://khanacademy.org";
+  return "http://khanacademy.org/" + kaslugs[Math.floor(Math.random()*kaslugs.length)];;
 }
