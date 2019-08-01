@@ -9,8 +9,6 @@ First, set your limits on your favorite social media sites. When your time's up,
      alt="Khantent Blocker"
      width="35%"
      style="display: inline; margin: 32px;" />
-     
-     
 <img src="images/Extension-1.png"
     alt="Khantent Blocker"
     width="35%"
