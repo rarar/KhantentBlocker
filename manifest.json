@@ -5,7 +5,7 @@
   "description": "Set limits on social media and learn things instead!",
   "version": "0.0.0.1",
   "content_scripts": [{
-    "matches": ["<all_urls>"],
+    "matches": ["*://*.facebook.com/*", "*://*.twitter.com/*", "*://*.reddit.com/*", "*://*.youtube.com/*", "*://*.linkedin.com/*", "*://*.instagram.com/*"],
     "js": ["content.js"]
   }],
   "permissions": ["activeTab", "storage", "tabs"],

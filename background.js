@@ -139,14 +139,14 @@ let limitChecks = {
 chrome.runtime.onInstalled.addListener(function() {
   chrome.storage.local.get('limits', function(data) {
     limits = data;
-    console.log("limits are " + JSON.stringify(limits));
+    // console.log("limits are " + JSON.stringify(limits));
   });
 
   chrome.tabs.query({
     active: true,
     currentWindow: true
   }, function(tab) {
-    console.log(tab[0].url);
+    // console.log(tab[0].url);
   });
 });
 
@@ -168,15 +168,12 @@ chrome.runtime.onMessage.addListener(
 // Set up timers here
 function setTimers(limits) {
   currentDay = new Date().getDay();
-  console.log("currentDay = " + currentDay);
-  console.log("setting timers");
   for (let limit in limits) {
     if (limits[limit] == null) continue;
     clearInterval(timers[limit]);
     countdowns[limit] = () => {
       if (urlChecks[limit]) {
         limits[limit] -= 1000;
-        console.log("remaining time on " + limit + " = " + limits[limit]);
         if (limits[limit] <= 0) {
           clearInterval(timers[limit]);
           limits[limit] = -1;
@@ -186,7 +183,6 @@ function setTimers(limits) {
       chrome.storage.local.set({
         limits: limits
       }, () => {
-        console.log(limit + " time remaining = " + limits[limit]);
       })
     }
   }
@@ -201,19 +197,19 @@ chrome.tabs.onActivated.addListener(function() {
     chrome.storage.local.set({
       limits: limits
     }, () => {
-      console.log("setting limits to null");
+      // console.log("setting limits to null");
     })
   }
   chrome.tabs.query({
     active: true,
     currentWindow: true
   }, function(tab) {
-    console.log("onActivated:: " + tab[0].url);
+    // console.log("onActivated:: " + tab[0].url);
     for (let limit in limits) {
       urlChecks[limit] = regexes[limit].test(tab[0].url);
       clearInterval(timers[limit]);
       if (urlChecks[limit] && !limitChecks[limit]) {
-        console.log("setting interval for " + limit);
+        // console.log("setting interval for " + limit);
         timers[limit] = setInterval(countdowns[limit], 1000);
       }
     }
@@ -227,19 +223,19 @@ chrome.tabs.onUpdated.addListener(function() {
     active: true,
     currentWindow: true
   }, function(tab) {
-    console.log("onUpdated:: " + tab[0].url);
+    // console.log("onUpdated:: " + tab[0].url);
     for (let limit in limits) {
       //urlChecks[limit] = checkUrl(tab[0].url, limits[limit], limit);
       urlChecks[limit] = regexes[limit].test(tab[0].url);
       if (urlChecks[limit] && limitChecks[limit]) {
-        console.log("You're on " + limit + " and your time is up!");
+        // console.log("You're on " + limit + " and your time is up!");
         chrome.tabs.update(tab[0].id, {
           url: getRandomContent()
         });
       } else {
         clearInterval(timers[limit]);
         if (urlChecks[limit] && !limitChecks[limit]) {
-          console.log("we're setting the timer for " + limit);
+          // console.log("we're setting the timer for " + limit);
           timers[limit] = setInterval(countdowns[limit], 1000);
         }
       }

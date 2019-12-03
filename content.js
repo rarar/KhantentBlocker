@@ -1,4 +1,3 @@
-let onward;
 let limits = {};
 let fbcb, fbTextLimit, twcb, twTextLimit, igcb, igTextLimit, ytcb, ytTextLimit, licb, liTextLimit, redcb, redTextLimit;
 let displayTimerInterval;
@@ -21,8 +20,12 @@ window.addEventListener('load', () => {
     }
 
     console.log("is limits empty? " + isEmpty);
+
     onward = document.getElementById('onward');
-    onward.addEventListener("click", sendLimitsToBackground);
+    if (typeof onward !== 'undefined') {
+      onward.addEventListener("click", sendLimitsToBackground);
+    }
+
 
     if (isEmpty) {
       // Object is empty (Would return true in this example)
